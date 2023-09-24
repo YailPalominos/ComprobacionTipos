@@ -39,7 +39,7 @@ public class Analisis {
                 "((Real|Entero) (([a-zA-Z0-9]+\\=\\d*)\\,)(([a-zA-Z0-9]+\\=\\d*)\\,)*(([a-zA-Z0-9]+\\=\\d*)\\;))");
         Pattern leerOEscribirVariables = Pattern.compile("((Leer|Escribir)\\(([a-zA-Z0-9]*\\))\\;)");
         Pattern realizarOperacion = Pattern.compile(
-                "[a-zA-Z0-9]+\\=+([a-zA-Z0-9.]+((\\+|\\/|\\*|\\-)+[a-zA-Z0-9.]+)*\\;)");
+                "(\\w+)\\s*=\\s*((?:\\d+(?:\\.\\d+)?)|\\w+)\\s*((?:[-+*/]\\s*((?:\\d+(?:\\.\\d+)?)|\\w+)\\s*)+)(\\s*(\\([^()]+\\)|\\[[^\\[\\]]+\\]))?\\s*;");
 
         /*
          * 1 ((Real|Entero) ([a-zA-Z0-9]*)\;)

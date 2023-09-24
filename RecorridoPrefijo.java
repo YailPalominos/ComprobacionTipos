@@ -1,32 +1,60 @@
 import java.util.Stack;
 
 public class RecorridoPrefijo {
-
     public static String realizarPrefijo(String operacion) {
+
         Stack<Character> operadores = new Stack<>();
         Stack<String> operandos = new Stack<>();
+        StringBuilder expresionPrefija = new StringBuilder();
 
-        String[] tokens = operacion.split("\\s+");
-        StringBuilder exprecionPrefija = new StringBuilder();
+        for (int i = 0; i < operacion.length(); i++) {
+            char caracter = operacion.charAt(i);
 
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i];
-
-            if (esOperador(token)) {
-                char operator = token.charAt(0);
-                while (!operadores.isEmpty() && getJerarquia(operator) <= getJerarquia(operadores.peek())) {
+            if (esOperador(caracter)) {
+                // Si el caracter es un operador, se compara su jerarquía con los operadores en
+                // la pila.
+                while (!operadores.isEmpty() && getJerarquia(caracter) <= getJerarquia(operadores.peek())) {
+                    // Mientras el operador en la pila tenga mayor o igual jerarquía, se desapilan
+                    // operandos y se forma una nueva expresión.
                     String operando1 = operandos.pop();
                     String operando2 = operandos.pop();
                     char currentOperator = operadores.pop();
                     String newOperand = currentOperator + " " + operando2 + " " + operando1;
                     operandos.push(newOperand);
                 }
-                operadores.push(operator);
-            } else {
-                operandos.push(token);
+                // Se apila el operador actual en la pila de operadores.
+                operadores.push(caracter);
+            } else if (caracter == '(') {
+                // Si el caracter es un paréntesis izquierdo, se apila directamente en la pila
+                // de operadores.
+                operadores.push(caracter);
+            } else if (caracter == ')') {
+                // Si el caracter es un paréntesis derecho, se desapilan operadores y operandos
+                // hasta encontrar el paréntesis izquierdo correspondiente.
+                while (!operadores.isEmpty() && operadores.peek() != '(') {
+                    String operando1 = operandos.pop();
+                    String operando2 = operandos.pop();
+                    char currentOperator = operadores.pop();
+                    String newOperand = currentOperator + " " + operando2 + " " + operando1;
+                    operandos.push(newOperand);
+                }
+                operadores.pop(); // Se retira el paréntesis izquierdo de la pila de operadores.
+            } else if (!Character.isWhitespace(caracter)) { // Ignoramos los espacios en blanco.
+                // Si el caracter es un número o parte de un número, lo añadimos a la pila de
+                // operandos.
+                StringBuilder token = new StringBuilder();
+                token.append(caracter);
+                while (i + 1 < operacion.length() && !esOperador(operacion.charAt(i + 1))
+                        && operacion.charAt(i + 1) != '(' && operacion.charAt(i + 1) != ')') {
+                    i++;
+                    token.append(operacion.charAt(i));
+                }
+                operandos.push(token.toString());
             }
         }
 
+        // Después de procesar toda la expresión, desapilamos cualquier operador que
+        // quede en la pila de operadores y formamos la expresión prefija.
         while (!operadores.isEmpty()) {
             String operando1 = operandos.pop();
             String operando2 = operandos.pop();
@@ -35,19 +63,22 @@ public class RecorridoPrefijo {
             operandos.push(newOperand);
         }
 
+        // La expresión prefija resultante se encuentra en la pila de operandos (debe
+        // haber solo un elemento en la pila).
         if (!operandos.isEmpty()) {
-            exprecionPrefija.append(operandos.pop());
+            expresionPrefija.append(operandos.pop());
         }
 
-        return exprecionPrefija.toString();
+        // Devolvemos la expresión prefija como una cadena.
+        return expresionPrefija.toString();
     }
 
-    // Verifica si es operador el token actual.
-    private static boolean esOperador(String token) {
-        return token.matches("[+\\-*/&|!<>]=*");
+    // Verifica si el caracter es un operador.
+    private static boolean esOperador(char caracter) {
+        return "+-*/&|!<>=".indexOf(caracter) != -1;
     }
 
-    // Obtinen la gerarquia del operador.
+    // Obtiene la jerarquía del operador.
     private static int getJerarquia(char operador) {
         if (operador == '+' || operador == '-') {
             return 1;

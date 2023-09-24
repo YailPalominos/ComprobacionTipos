@@ -1,4 +1,2 @@
-Real x,y,z;
 Entero a,b;
-x=y/b;
-Escribir(x);
+a=a+b*b+a;
