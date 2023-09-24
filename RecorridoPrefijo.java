@@ -3,43 +3,43 @@ import java.util.Stack;
 public class RecorridoPrefijo {
 
     public static String realizarPrefijo(String operacion) {
-        Stack<Character> operators = new Stack<>();
-        Stack<String> operands = new Stack<>();
+        Stack<Character> operadores = new Stack<>();
+        Stack<String> operandos = new Stack<>();
 
         String[] tokens = operacion.split("\\s+");
-        StringBuilder prefixExpression = new StringBuilder();
+        StringBuilder exprecionPrefija = new StringBuilder();
 
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
 
             if (esOperador(token)) {
                 char operator = token.charAt(0);
-                while (!operators.isEmpty() && getJerarquia(operator) <= getJerarquia(operators.peek())) {
-                    String operand1 = operands.pop();
-                    String operand2 = operands.pop();
-                    char currentOperator = operators.pop();
-                    String newOperand = currentOperator + " " + operand2 + " " + operand1;
-                    operands.push(newOperand);
+                while (!operadores.isEmpty() && getJerarquia(operator) <= getJerarquia(operadores.peek())) {
+                    String operando1 = operandos.pop();
+                    String operando2 = operandos.pop();
+                    char currentOperator = operadores.pop();
+                    String newOperand = currentOperator + " " + operando2 + " " + operando1;
+                    operandos.push(newOperand);
                 }
-                operators.push(operator);
+                operadores.push(operator);
             } else {
-                operands.push(token);
+                operandos.push(token);
             }
         }
 
-        while (!operators.isEmpty()) {
-            String operand1 = operands.pop();
-            String operand2 = operands.pop();
-            char operator = operators.pop();
-            String newOperand = operator + " " + operand2 + " " + operand1;
-            operands.push(newOperand);
+        while (!operadores.isEmpty()) {
+            String operando1 = operandos.pop();
+            String operando2 = operandos.pop();
+            char operator = operadores.pop();
+            String newOperand = operator + " " + operando2 + " " + operando1;
+            operandos.push(newOperand);
         }
 
-        if (!operands.isEmpty()) {
-            prefixExpression.append(operands.pop());
+        if (!operandos.isEmpty()) {
+            exprecionPrefija.append(operandos.pop());
         }
 
-        return prefixExpression.toString();
+        return exprecionPrefija.toString();
     }
 
     // Verifica si es operador el token actual.
