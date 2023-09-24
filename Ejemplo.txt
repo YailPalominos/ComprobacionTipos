@@ -1,7 +1,4 @@
-Real cuenta, numero, resultado;
-Entero valor;
-Leer (valor);
-cuenta = 23 + (numero – valor);
-numero = cuenta / 123.99;
-resultado = numero + cuenta;
-Escribir (resultado);
+Real x,y,z;
+Entero a,b;
+x=y/b;
+Escribir(x);
